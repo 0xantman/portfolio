@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1></h1>
+    <h1>Hello</h1>
   </div>
 </template>
 
@@ -8,6 +8,11 @@
 import Logo from '~/components/Logo.vue'
 
 export default {
+  data(){
+    return{
+
+    }
+  },
   components: {
     Logo
   }

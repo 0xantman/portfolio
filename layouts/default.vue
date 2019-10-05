@@ -1,31 +1,8 @@
 <template>
   <div>
-    <div>
-      <b-navbar toggleable="lg" type="dark" id="navbar">
-        <b-navbar-brand class="font-weight-bolder" href="/" id="title">@0xantman</b-navbar-brand>
-
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
-            <b-nav-item href="/">Portfolio</b-nav-item>
-          </b-navbar-nav>
-
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown right>
-              <!-- Using 'button-content' slot -->
-              <template v-slot:button-content>
-                <em>Admin</em>
-              </template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
-    </div>
-
+    <header>
+      <Navbar/>
+    </header>
     <nuxt />
 
     <footer class="border-top">
@@ -47,7 +24,15 @@
     </footer>
   </div>
 </template>
+<script>
+import Navbar from '~/components/Navbar'
 
+export default {
+  components: {
+    Navbar
+  }
+}
+</script>
 <style>
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
