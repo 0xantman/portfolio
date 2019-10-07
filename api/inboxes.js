@@ -10,9 +10,7 @@ const db = new sqlite3.Database('./db/database.db', (err) =>{
 });
 
 
-inboxesRouter.get('/', (req, res, next) =>{
-    res.status(200).json({data: 'ok'});
-})
+
 
 inboxesRouter.post('/', (req, res, next) =>{
     

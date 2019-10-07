@@ -6,12 +6,11 @@ const apiRouter = require('../api/api');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors')
-
+const errorhandler = require('errorhandler');
 
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
-
 app.use('/', apiRouter);
 
 // Import and Set Nuxt.js options

@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div >
     <header>
       <Navbar/>
     </header>
-    <nuxt />
+    <nuxt/>
 
-    <footer class="border-top">
+    <footer class="border-top mt-5">
       <div class="container">
         <div class="row justify-content-start">
           <b-nav vertical class="w-25">
@@ -34,6 +34,8 @@ export default {
 }
 </script>
 <style>
+
+
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -44,6 +46,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  height: 100%;
 }
 
 *,
@@ -82,18 +85,9 @@ html {
   background-color: #35495e;
 }
 body{
-  height: 100%;
-  margin: 0;
-  display:flex; 
-  flex-direction:column; 
+  height:100%;
 }
-footer{
-  margin-top:auto; 
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  margin-top: 50px;
-}
+
 #navbar{
   background-color:#563d7c;
 }
