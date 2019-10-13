@@ -1,5 +1,8 @@
 
 module.exports = {
+  router: {
+    linkActiveClass: 'active'
+  },
   mode: 'universal',
   /*
   ** Headers of the page
@@ -41,7 +44,33 @@ module.exports = {
   modules: [
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/admin/login', method: 'post', propertyName: false },
+          logout: false, //{ url: '/admin/logout', method: 'post', propertyName: false  },
+          user: false //{ url: '/admin/', method: 'get', propertyName: false  }
+        },
+
+
+        //tokenRequired: false,
+        //tokenType: false
+        tokenRequired: true,
+        tokenType: 'bearer'
+      },
+      redirect: {
+        home: '/'
+      }
+    }
+  },
+  axios: {
+    baseURL: 'http://localhost:3000/',
+    credentials: false
+  },
   /*
   ** Build configuration
   */

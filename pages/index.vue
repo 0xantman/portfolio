@@ -16,6 +16,8 @@ export default {
 
     }
   },
+  mounted(){
+  },
   components: {
     Logo,
     Profile,

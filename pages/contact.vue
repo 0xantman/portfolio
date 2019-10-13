@@ -38,8 +38,8 @@
                 </ValidationProvider>
                 <b-alert variant="success" :show="success">Votre message a été envoyé avec succès!</b-alert>
                 <b-alert :show="error" variant="danger">Erreur lors de l'envoie du message contacter moi directement megalima@hotmail.com </b-alert>
-                <b-button type="submit" variant="primary" :disabled="!valid || sending" >
-                    <span v-if="sending">
+                <b-button type="submit" variant="primary" :disabled="!valid || sending" >
+                  <span v-if="sending">
                         <b-spinner small type="grow"></b-spinner>
                         En cours...
                     </span>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from 'axios'; 
+
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 export default {
     data(){
@@ -83,7 +83,8 @@ export default {
            console.error('error form required')
         }
          this.sending = true;
-            axios.post('/api', {
+
+            this.$axios.post('/api', {
                 email: this.email,
                 subject: this.sujet,
                 message: this.message
