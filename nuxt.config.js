@@ -51,9 +51,9 @@ module.exports = {
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/admin/login', method: 'post', propertyName: false },
+          login: { url: '/admin/login', method: 'post', propertyName: 'token' },
           logout: false, //{ url: '/admin/logout', method: 'post', propertyName: false  },
-          user: false //{ url: '/admin/', method: 'get', propertyName: false  }
+          user: false//{ url: '/admin/backend', method: 'get', propertyName: false  }
         },
 
 
@@ -63,13 +63,13 @@ module.exports = {
         tokenType: 'bearer'
       },
       redirect: {
-        home: '/'
+        home: '/',
       }
     }
   },
   axios: {
     baseURL: 'http://localhost:3000/',
-    credentials: false
+    //credentials: true
   },
   /*
   ** Build configuration

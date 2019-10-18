@@ -5,7 +5,7 @@
             <b-form @submit.prevent="submit()" >
 
               <ValidationProvider name="photo" rules="required" v-slot="{ errors }">
-                    <b-form-group label-for="link-input" label="Photo liens:" description="Update photo.">
+                    <b-form-group label-for="link-input" label="Photo de votre profile liens:" >
                         <b-form-input 
                             id="link-input"
                             v-model="image" 
@@ -37,7 +37,7 @@
                 </ValidationProvider>
 
                 <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
-                    <b-form-group label-for="email-input" label="Adresse email:" description="Update adresse email.">
+                    <b-form-group label-for="email-input" label="Adresse email:">
                         <b-form-input 
                             id="email-input"
                             v-model="email" 
@@ -48,11 +48,11 @@
                 </ValidationProvider>
 
                 <ValidationProvider name="sujet" rules="required" v-slot="{ errors }">
-                    <b-form-group label-for="subject-input" label="Sujet:">
+                    <b-form-group label-for="url-input" label="Web url:" description="Liens de votre profile Facebook, LinkedIn...">
                         <b-form-input 
-                            id="subject-input"
-                            v-model="sujet" 
-                            placeholder="Sujet"
+                            id="url-input"
+                            v-model="website" 
+                            placeholder="http://google.com"
                         ></b-form-input>
                         <span class="text-danger small">{{ errors[0] }}</span>
                     </b-form-group>
@@ -61,7 +61,7 @@
                 <b-form-group label-for="textarea-input" label="Biographie:">
                     <b-form-textarea
                         id="textarea-input"
-                        v-model="message"
+                        v-model="biography"
                         placeholder="Ecrire quelque chose..."
                         rows="3"
                         max-rows="6"
@@ -100,7 +100,7 @@ export default {
         }
     },*/
    asyncData ({ $axios }) {
-    return $axios.$get('/admin/profile')
+    return $axios.$get('/admin/user')
     .then((res) => {
       console.log(res.profile)
       return {  

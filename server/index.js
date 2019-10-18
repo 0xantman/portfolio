@@ -5,18 +5,21 @@ const app = express()
 const apiRouter = require('../api/api');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+
 const errorhandler = require('errorhandler');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
-var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
-app.set('trust proxy', 1) // trust first proxy
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true, maxAge: 60000}
-}))
+app.use(cookieParser());
+// var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
+// app.set('trust proxy', 1) // trust first proxy
+// app.use(session({
+//   secret: 'keyboard cat',
+//   resave: false,
+//   saveUninitialized: true,
+  
+// }))
 
 
 app.use(bodyParser.json());

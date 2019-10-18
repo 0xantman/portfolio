@@ -89,11 +89,6 @@ export default {
                 this.error = true
             })*/
         }
-    },
-    beforeCreate(){
-        if(this.$auth.loggedIn){
-            this.$router.push('/');
-        }
     }
 }
 </script>
