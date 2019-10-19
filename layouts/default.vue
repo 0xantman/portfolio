@@ -11,7 +11,6 @@
           <b-nav vertical class="w-25">
             <b-nav-item disabled class="font-weight-bold h5">Support</b-nav-item>
             <b-nav-item href="/contact">Contact</b-nav-item>
-            <b-nav-item>Another Link</b-nav-item>
           </b-nav>
         </div>
         <div class="row justify-content-center">

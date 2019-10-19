@@ -4,14 +4,15 @@
             <div class="card mb-3 " style="max-width: 540px;">
                 <div class="row no-gutters">
                     <div class="col-md-4">
-                        <img src="https://cdn.webshopapp.com/shops/178694/files/234636382/700x1000x1/marvel-ant-man-marvel-profile.jpg" class="card-img" alt="">
+                        <img :src="image" class="card-img" alt="">
                     </div>
                     <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title">{{fullname}}</h5>
                         <p class="card-text">{{birthday}}</p>
                         <p class="card-text" v-html="biography"></p>
-                        <a :href="website">{{website}}</a>
+                        <p class="card-text" v-html="website"></p>
+                        <!--<a :href="website">{{website}}</a>-->
                         <!--<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
                     </div>
                     </div>
@@ -29,7 +30,8 @@ export default {
             birthday: null,
             website: null,
             biography: null,
-            username: null
+            username: null,
+            image : null
         }
     },
     created(){
@@ -40,6 +42,7 @@ export default {
             this.biography = response.data.profile.biography;
             this.website = response.data.profile.website;
             this.username = response.data.profile.username;
+            this.image = response.data.profile.image;
 
         }).catch(error =>{
             console.log(error);

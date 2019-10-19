@@ -9,6 +9,7 @@ const db = new sqlite3.Database('./db/database.db', (err) =>{
     }
     console.log('conected to the db')
 });
+const jwtPass = "Eq293kdf.fdfd4943d";
 
 userRouter.use('/login', (req, res, next) =>{
     //console.log(req.body);
@@ -24,7 +25,7 @@ userRouter.use('/login', (req, res, next) =>{
             }else{
                 if(row){
                     //req.count = row.length;
-                    req.access = jwt.sign({user: req.body.email, rect: "yoyoyoyoyoyo"}, 'dummy');
+                    req.access = jwt.sign({user: req.body.email}, jwtPass);
                     //req.session.authUser = {username: req.body.email};
                     //console.log(req.session.admin);
                     next();
@@ -38,7 +39,28 @@ userRouter.use('/login', (req, res, next) =>{
     }else{
         res.status(404).send();
     }
-})
+});
+
+userRouter.use(['/user/:id', '/user/profile/:id'], (req, res, next) =>{
+    if(req.headers.authorization){
+        const headerSplit = req.headers.authorization.split(' ');
+        const token = headerSplit[1];
+        //console.dir(token);
+        // verify a token symmetric
+        jwt.verify(token, jwtPass, function(err, decoded) {
+            console.log(decoded) // bar
+            if(!err){
+                next();
+                //res.status(200).json({data: "clean"});
+            }else{
+                next(err)
+                res.status(404).send();
+            }
+        });
+    }else{
+        res.status(404).send();
+    }
+});
 
 userRouter.post('/login', (req, res, next) =>{
     res.status(200).json({token: req.access});
@@ -68,7 +90,7 @@ userRouter.get('/backend', (req, res, next) =>{
     
 
 })
-
+//profile at home page public api
 userRouter.get('/profile', (req, res, next) =>{
     //console.log(req.session);
     db.get("SELECT * FROM Admin", (err, row) =>{
@@ -80,51 +102,63 @@ userRouter.get('/profile', (req, res, next) =>{
                 birthday : row.birthday,
                 biography : row.biography,
                 username : row.username,
-                website : row.website_link
+                website : row.website_link,
+                image : row.image,
+                email: row.email
+
             }
             res.status(200).json({profile: data});
         }
     })
 })
 
-userRouter.get('/user', (req, res, next) =>{
-    
-    if(req.headers.authorization){
-        const headerSplit = req.headers.authorization.split(' ');
-        const token = headerSplit[1];
-        //console.dir(token);
-        // verify a token symmetric
-        jwt.verify(token, 'dummy', function(err, decoded) {
-            console.log(decoded) // bar
-            if(!err){
-                db.get("SELECT * FROM Admin", (err, row) =>{
-                    if(err){
-                        res.status('404').send();
-                    }else{
-                        const data = {
-                            fullname : row.full_name,
-                            birthday : row.birthday,
-                            biography : row.biography,
-                            username : row.username,
-                            website : row.website_link
-                        }
-                        res.status(200).json({profile: data});
-                    }
-                })
-                //res.status(200).json({data: "clean"});
+userRouter.get('/user/profile', (req, res, next) =>{
+
+    db.get("SELECT * FROM Admin", (err, row) =>{
+        if(err){
+            res.status('404').send();
+        }else{
+            const data = {
+                email : row.email,
+                image : row.image,
+                fullname : row.full_name,
+                birthday : row.birthday,
+                biography : row.biography,
+                username : row.username,
+                website : row.website_link,
+                
+            }
+            res.status(200).json({profile: data});
+        }
+    });
+})
+
+userRouter.post('/user/profile/update', (req, res, next) =>{
+    const data = req.body;
+    const updateData ={
+        $email : data.email.trim(),
+        $image : data.image,
+        $fullname : data.fullname,
+        $birthday : data.birthday,
+        $biography : data.biography,
+        $username : data.username,
+        $website : data.website
+    }
+    db.run(`UPDATE Admin SET 
+        email = $email, 
+        image = $image,
+        full_name = $fullname,
+        birthday = $birthday,
+        biography = $biography,
+        username = $username,
+        website_link = $website`, updateData, (err, success) =>{
+            if(err){
+                console.error(err);
+                res.status('404').send();
             }else{
-                res.status(404).send();
+                res.status(200).json({update: 'ok'});
             }
         });
-    }else{
-        res.status(404).send();
-    }
-    // if(req.session.authUser){
-        
-    // }else{
-    //     res.status(404).send();
-    // }
-    
 })
 
 module.exports = userRouter;
