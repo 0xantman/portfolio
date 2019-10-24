@@ -9,7 +9,7 @@ const db = new sqlite3.Database('./db/database.db', (err) =>{
     }
     console.log('conected to the db')
 });
-const jwtPass = "Eq293kdf.fdfd4943d";
+const jwtPass = "Eq293kdf.fdfd4943deLoki";
 
 userRouter.use('/login', (req, res, next) =>{
     //console.log(req.body);
@@ -48,17 +48,18 @@ userRouter.use(['/user/:id', '/user/profile/:id'], (req, res, next) =>{
         //console.dir(token);
         // verify a token symmetric
         jwt.verify(token, jwtPass, function(err, decoded) {
-            console.log(decoded) // bar
+            //console.log(decoded) // bar
             if(!err){
                 next();
                 //res.status(200).json({data: "clean"});
             }else{
-                next(err)
-                res.status(404).send();
+                //res.clearCookie("auth._token.local");
+                //next(err);
+                res.status(403).send();
             }
         });
     }else{
-        res.status(404).send();
+        res.status(403).send();
     }
 });
 
@@ -66,30 +67,6 @@ userRouter.post('/login', (req, res, next) =>{
     res.status(200).json({token: req.access});
 })
 
-userRouter.get('/backend', (req, res, next) =>{
-    //console.dir(req.headers.authorization);
-    console.log(req);
-    if(req.headers.authorization){
-        const headerSplit = req.headers.authorization.split(' ');
-        const token = headerSplit[1];
-        //console.dir(token);
-        // verify a token symmetric
-        jwt.verify(token, 'dummy', function(err, decoded) {
-            console.log(decoded) // bar
-            if(!err){
-                res.status(200).json({data: "clean"});
-            }else{
-                res.status(404).send();
-            }
-        });
-    }else{
-        res.status(404).send();
-    }
-    
-   
-    
-
-})
 //profile at home page public api
 userRouter.get('/profile', (req, res, next) =>{
     //console.log(req.session);
@@ -159,6 +136,33 @@ userRouter.post('/user/profile/update', (req, res, next) =>{
                 res.status(200).json({update: 'ok'});
             }
         });
-})
+});
+
+userRouter.get('/user/inbox/news', (req, res, next) =>{
+    db.all("SELECT * FROM Message WHERE unread = 0", (err, rows) => {
+        if(err){
+            res.status(404).send()
+            
+        }else{
+            if(rows){
+                const news = [];
+
+                rows.forEach( dataNews => {
+                    const json = {
+                        date: dataNews.date_time,
+                        email: dataNews.email,
+                        id: dataNews.id
+                    }
+                    news.push(json);
+                })
+                
+                res.status(200).json({new : news, inbox: true})
+            }
+            else{
+                res.status(200).json({inbox: false})
+            }
+        }
+    })
+});
 
 module.exports = userRouter;

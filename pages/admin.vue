@@ -4,7 +4,7 @@
        
        <ul class="nav nav-tabs">
         <li class="nav-item">
-            <NuxtLink class="nav-link" to="/admin">
+            <NuxtLink class="nav-link" to="/admin/my-profile">
                 Profile
             </NuxtLink>
         </li>
