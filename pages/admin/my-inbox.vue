@@ -7,7 +7,7 @@
                    News <b-badge variant="light">{{news}}</b-badge>
             </NuxtLink>
             <NuxtLink class="nav-link" to="/admin/my-inbox/archive">
-                  Archive
+                  Archive <b-badge variant="light">{{archive}}</b-badge>
             </NuxtLink>
         </b-nav>
       </b-col>
@@ -20,21 +20,23 @@
 
 <script>
 export default {
-  /*asyncData ({ $axios, $auth, redirect, $emit}) {
+  asyncData ({ $axios, $auth, redirect, $emit}) {
     return $axios.$get('/admin/user/inbox/count')
     .then((res) => {
+      console.log(res)
       //GET THE COUNT FOR NOTIFICATION NUMBERS.
       //console.log(res.new.length)
       //$emit('new-notification', res.new.length);
       return {  
-              news: 2,
-              archive: 0     
+              news: res.unread,
+              archive: res.read
+              //archive: 0     
             }
     }).catch(async (e) =>{
         await $auth.logout();
         redirect(302, '/login');
     })
-  },*/
+  },
 }
 </script>
 

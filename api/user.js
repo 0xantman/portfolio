@@ -139,7 +139,7 @@ userRouter.post('/user/profile/update', (req, res, next) =>{
 });
 
 userRouter.get('/user/inbox/news', (req, res, next) =>{
-    db.all("SELECT * FROM Message WHERE unread = 0", (err, rows) => {
+    db.all("SELECT * FROM Message WHERE unread = 0 ORDER BY date_time DESC", (err, rows) => {
         if(err){
             res.status(404).send()
             
@@ -151,6 +151,7 @@ userRouter.get('/user/inbox/news', (req, res, next) =>{
                     const json = {
                         date: dataNews.date_time,
                         email: dataNews.email,
+                        subject: dataNews.subject,
                         id: dataNews.id
                     }
                     news.push(json);
@@ -163,6 +164,67 @@ userRouter.get('/user/inbox/news', (req, res, next) =>{
             }
         }
     })
+});
+
+userRouter.get('/user/inbox/count', (req, res, next) => {
+    const data = req.body;
+    db.get('SELECT COUNT(*) AS unreadCount, (SELECT COUNT(*) FROM Message WHERE unread = 1) AS readCount FROM Message WHERE unread = 0', (err, row) =>{
+        if(err){
+
+        }else{
+            if(row){
+                res.status(200).json({unread : row.unreadCount, read : row.readCount })
+            }else{
+                //res.status(200).json();
+            }
+        }
+    })
+});
+
+userRouter.post('/user/inbox/archive', (req, res, next) => {
+    req.body.data.forEach(element => {
+        const ids = {
+            $id : element.id
+        }
+        db.run('UPDATE Message SET unread = 1 WHERE id = $id', ids, (err, success) =>{
+            if(err){
+    
+            }else{
+               
+                res.status(200).json({success : true })
+                
+            }
+        })
+    });
+    /*db.run('UPDATE Message SELECT COUNT(*) AS unreadCount, (SELECT COUNT(*) FROM Message WHERE unread = 1) AS readCount FROM Message WHERE unread = 0', (err, row) =>{
+        if(err){
+
+        }else{
+            if(row){
+                res.status(200).json({unread : row.unreadCount, read : row.readCount })
+            }else{
+                //res.status(200).json();
+            }
+        }
+    })*/
+});
+
+userRouter.post('/user/inbox/delete', (req, res, next) => {
+
+    req.body.data.forEach(element => {
+        const ids = {
+            $id : element.id
+        }
+        db.run('DELETE FROM Message WHERE id = $id', ids, (err, success) =>{
+            if(err){
+    
+            }else{
+               
+                res.status(200).json({success : true })
+                
+            }
+        })
+    });
 });
 
 module.exports = userRouter;
