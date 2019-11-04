@@ -11,6 +11,7 @@ const db = new sqlite3.Database('./db/database.db', (err) =>{
 });
 const jwtPass = "Eq293kdf.fdfd4943deLoki";
 
+
 userRouter.use('/login', (req, res, next) =>{
     //console.log(req.body);
     if(req.body.password && req.body.email){
@@ -41,7 +42,7 @@ userRouter.use('/login', (req, res, next) =>{
     }
 });
 
-userRouter.use(['/user/:id', '/user/profile/:id'], (req, res, next) =>{
+const isAdmin = (req, res, next) =>{
     if(req.headers.authorization){
         const headerSplit = req.headers.authorization.split(' ');
         const token = headerSplit[1];
@@ -61,7 +62,7 @@ userRouter.use(['/user/:id', '/user/profile/:id'], (req, res, next) =>{
     }else{
         res.status(403).send();
     }
-});
+};
 
 userRouter.post('/login', (req, res, next) =>{
     res.status(200).json({token: req.access});
@@ -89,7 +90,7 @@ userRouter.get('/profile', (req, res, next) =>{
     })
 })
 
-userRouter.get('/user/profile', (req, res, next) =>{
+userRouter.get('/user/profile', isAdmin, (req, res, next) =>{
 
     db.get("SELECT * FROM Admin", (err, row) =>{
         if(err){
@@ -109,8 +110,8 @@ userRouter.get('/user/profile', (req, res, next) =>{
         }
     });
 })
-
-userRouter.post('/user/profile/update', (req, res, next) =>{
+// Admin action update his profile
+userRouter.post('/user/profile/update', isAdmin, (req, res, next) =>{
     const data = req.body;
     const updateData ={
         $email : data.email.trim(),
@@ -138,8 +139,9 @@ userRouter.post('/user/profile/update', (req, res, next) =>{
         });
 });
 
-userRouter.get('/user/inbox/news', (req, res, next) =>{
-    db.all("SELECT * FROM Message WHERE unread = 0 ORDER BY date_time DESC", (err, rows) => {
+// Get latest unread message 
+userRouter.get('/user/inbox/news', isAdmin, (req, res, next) =>{
+    db.all("SELECT * FROM Message WHERE unread = 0 OR archive = 0 ORDER BY date_time DESC", (err, rows) => {
         if(err){
             res.status(404).send()
             
@@ -152,6 +154,7 @@ userRouter.get('/user/inbox/news', (req, res, next) =>{
                         date: dataNews.date_time,
                         email: dataNews.email,
                         subject: dataNews.subject,
+                        unread: dataNews.unread,
                         id: dataNews.id
                     }
                     news.push(json);
@@ -165,10 +168,40 @@ userRouter.get('/user/inbox/news', (req, res, next) =>{
         }
     })
 });
+// Get * archived message 
+userRouter.get('/user/inbox/archive', isAdmin, (req, res, next) =>{
+    db.all("SELECT * FROM Message WHERE archive = 1 ORDER BY date_time DESC", (err, rows) => {
+        if(err){
+            res.status(404).send()
+            
+        }else{
+            if(rows){
+                const news = [];
 
-userRouter.get('/user/inbox/count', (req, res, next) => {
-    const data = req.body;
-    db.get('SELECT COUNT(*) AS unreadCount, (SELECT COUNT(*) FROM Message WHERE unread = 1) AS readCount FROM Message WHERE unread = 0', (err, row) =>{
+                rows.forEach( dataNews => {
+                    const json = {
+                        date: dataNews.date_time,
+                        email: dataNews.email,
+                        subject: dataNews.subject,
+                        unread: dataNews.unread,
+                        id: dataNews.id
+                    }
+                    news.push(json);
+                })
+                
+                res.status(200).json({archive : news, inbox: true})
+            }
+            else{
+                res.status(200).json({inbox: false})
+            }
+        }
+    })
+});
+
+// Count how many message is unread in the inbox for news and archive
+userRouter.get('/user/inbox/count', isAdmin, (req, res, next) => {
+   
+    db.get('SELECT COUNT(*) AS unreadCount, (SELECT COUNT(*) FROM Message WHERE unread = 0 AND archive = 1) AS readCount FROM Message WHERE unread = 0 AND archive = 0', (err, row) =>{
         if(err){
 
         }else{
@@ -181,50 +214,77 @@ userRouter.get('/user/inbox/count', (req, res, next) => {
     })
 });
 
-userRouter.post('/user/inbox/archive', (req, res, next) => {
-    req.body.data.forEach(element => {
-        const ids = {
-            $id : element.id
-        }
-        db.run('UPDATE Message SET unread = 1 WHERE id = $id', ids, (err, success) =>{
-            if(err){
-    
-            }else{
-               
-                res.status(200).json({success : true })
-                
+// Admin action archive the message
+userRouter.post('/user/inbox/action/archive', isAdmin, (req, res, next) => {
+    try {
+        req.body.data.forEach(element => {
+            const ids = {
+                $id : element.id
             }
-        })
-    });
-    /*db.run('UPDATE Message SELECT COUNT(*) AS unreadCount, (SELECT COUNT(*) FROM Message WHERE unread = 1) AS readCount FROM Message WHERE unread = 0', (err, row) =>{
+            db.run('UPDATE Message SET archive = 1 WHERE id = $id', ids, (err, success) =>{
+                if(err){
+        
+                }else{
+                    
+                }
+            })
+            
+        });
+        res.status(200).json({success : true })
+    } catch (error) {
+        res.status(404).json({success : false })
+    }
+    
+});
+
+// Admin action delete the message
+userRouter.post('/user/inbox/action/delete', isAdmin, (req, res, next) => {
+
+    try {
+        req.body.data.forEach(element => {
+            const ids = {
+                $id : element.id
+            }
+            db.run('DELETE FROM Message WHERE id = $id', ids, (err, success) =>{
+                if(err){
+                    
+                }else{
+                   
+                    //res.status(200).json({success : true })
+                    
+                }
+            })
+        });
+
+        res.status(200).json({success : true });
+    } catch (error) {
+         
+        res.status(404).json({success : false });
+    }
+    
+    
+});
+
+
+userRouter.get('/user/my-inbox/:id', isAdmin, (req, res, next) =>{
+    const param = {
+        $id : req.params.id
+    }
+ 
+    db.get("SELECT * FROM Message WHERE id = $id", param, (err, row) =>{
         if(err){
 
         }else{
             if(row){
-                res.status(200).json({unread : row.unreadCount, read : row.readCount })
+                db.run("UPDATE Message SET unread = 1 WHERE id = $id ", param, (err, success) => {
+
+                });
+                res.status(200).json({message : row});
             }else{
-                //res.status(200).json();
+       
             }
         }
-    })*/
-});
-
-userRouter.post('/user/inbox/delete', (req, res, next) => {
-
-    req.body.data.forEach(element => {
-        const ids = {
-            $id : element.id
-        }
-        db.run('DELETE FROM Message WHERE id = $id', ids, (err, success) =>{
-            if(err){
-    
-            }else{
-               
-                res.status(200).json({success : true })
-                
-            }
-        })
-    });
+    })
 });
 
 module.exports = userRouter;

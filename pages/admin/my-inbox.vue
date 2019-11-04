@@ -19,23 +19,32 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
-  asyncData ({ $axios, $auth, redirect, $emit}) {
+  
+  asyncData ({ $axios, $auth, redirect, $emit, store}) {
     return $axios.$get('/admin/user/inbox/count')
     .then((res) => {
       console.log(res)
       //GET THE COUNT FOR NOTIFICATION NUMBERS.
       //console.log(res.new.length)
       //$emit('new-notification', res.new.length);
-      return {  
-              news: res.unread,
-              archive: res.read
-              //archive: 0     
-            }
+      
+      store.commit('notification/updateNews', res.unread);
+      store.commit('notification/updateArchive', res.read);
+
     }).catch(async (e) =>{
         await $auth.logout();
         redirect(302, '/login');
     })
+  },
+  computed: {
+    news () {
+      return this.$store.state.notification.news
+    },
+    archive () {
+      return this.$store.state.notification.archive
+    }
   },
 }
 </script>
