@@ -1,11 +1,12 @@
 
 const sqlite3 = require('sqlite3');
+const env = require('dotenv').config();
 
 const db = new sqlite3.Database('./db/database.db', (err) =>{
     if(err){
         console.error(err.message);
     }
-    console.log('conected to the db')
+    console.log('conected to the db ')
 });
 
 db.serialize(function(){
@@ -32,7 +33,12 @@ db.serialize(function(){
         image TEXT
         )`);
     
-    //db.run("UPDATE Admin SET email = 'rico@mail.com' WHERE id = 1");
+    // UPDATE the password in DB according your env file.
+    db.run("UPDATE Admin SET email = $email AND password = $password WHERE id = 1", {
+        $email : process.env.DEFAULT_EMAIL,
+        $password : process.env.DEFAULT_PASSWORD
+    });
+    
     //db.run("ALTER TABLE Message ADD archive BOOL DEFAULT 0");
     //db.run("UPDATE Admin SET biography = 'const <span style=''color:#21D0C9''>hero</span> = ''<span style=''color:#96734D''>Full Stack Web Engineer</span>''; <span style=''color:#2CC0D0''>console</span>.<span style=''color:#34ADD1''>log</span>(<span style=''color:#E7DC6C''>`</span>${<span style=''color:#21D0C9''>hero</span>} <span style=''color:#96734D''>Ready for new mission... Waiting...`</span>);' WHERE id = 1");
 });

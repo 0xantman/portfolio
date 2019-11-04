@@ -21,7 +21,7 @@
 <script>
 import { mapMutations } from 'vuex'
 export default {
-  
+
   asyncData ({ $axios, $auth, redirect, $emit, store}) {
     return $axios.$get('/admin/user/inbox/count')
     .then((res) => {
@@ -45,7 +45,7 @@ export default {
     archive () {
       return this.$store.state.notification.archive
     }
-  },
+  }
 }
 </script>
 

@@ -1,9 +1,11 @@
+const env = require('dotenv').config();
 
 module.exports = {
   router: {
     linkActiveClass: 'active'
   },
   mode: 'universal',
+  env: env.parsed,
   /*
   ** Headers of the page
   */
