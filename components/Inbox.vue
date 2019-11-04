@@ -6,7 +6,7 @@
             </b-card-text>
             <b-button @click="action" block :disabled="!selectedOption || selectedItems.length <= 0" v-if="selectedOption" class="mt-2" :variant=" (selectedOption == 'A') ? 'primary' : 'danger'"> <span v-if="selectedOption == 'A'"> Archive {{selectedItems.length}} item(s)</span> <span v-else>Delete {{selectedItems.length}} item(s)</span></b-button>
         </b-card>
-        <b-table v-if="inbox" striped hover :items="items" :busy="isBusy" :fields="fields" selectable  @row-selected="onRowSelected">
+        <b-table v-if="items.length != 0" striped hover :items="items" :busy="isBusy" :fields="fields" selectable  @row-selected="onRowSelected">
             <template v-slot:table-busy>
                 <div class="text-center text-danger my-2">
                     <b-spinner class="align-middle"></b-spinner>
@@ -61,9 +61,6 @@ export default {
     props:{
         items:{
             type: Array
-        },
-        inbox:{
-            type: Boolean
         },
         archiveOption:{
             type: Boolean,

@@ -1,5 +1,5 @@
 <template>
-  <Inbox :inbox="inbox" :items="items" :archiveOption="false" @action="reload"/>
+  <Inbox :items="items" :archiveOption="false" @action="reload"/>
 </template>
 
 <script>

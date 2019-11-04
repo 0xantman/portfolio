@@ -1,5 +1,5 @@
 <template>
-    <Inbox :inbox="inbox" :items="items" @action="reload"/>
+    <Inbox :items="items" @action="reload"/>
 </template>
 
 <script>
