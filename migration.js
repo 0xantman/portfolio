@@ -50,6 +50,8 @@ db.serialize(function(){
         date_end TEXT,
         date_time TEXT DEFAULT CURRENT_TIMESTAMP
     )`);
+
+
     
     // You lost your password ? UPDATE the password in DB according your env file. 
     // Uncomment above code and run node migration.js with your newly password at .env file
