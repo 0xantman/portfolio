@@ -1,7 +1,5 @@
 <template>
-   
    <div>
-       
        <ul class="nav nav-tabs">
         <li class="nav-item">
             <NuxtLink class="nav-link" to="/admin/my-profile">

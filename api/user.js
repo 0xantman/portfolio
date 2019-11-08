@@ -2,6 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const sqlite3 = require('sqlite3');
 const jwt = require('jsonwebtoken');
+const env = require('dotenv').config();
 
 const db = new sqlite3.Database('./db/database.db', (err) =>{
     if(err){
@@ -9,18 +10,18 @@ const db = new sqlite3.Database('./db/database.db', (err) =>{
     }
     console.log('conected to the db')
 });
-const jwtPass = "Eq293kdf.fdfd4943deLoki";
-
+//get private token password
+const jwtPass = process.env.JWT_SECRET_KEY;
 
 userRouter.use('/login', (req, res, next) =>{
-    //console.log(req.body);
     if(req.body.password && req.body.email){
         const login = {
             $email: req.body.email,
             $password: req.body.password
         }
-
+        
         db.get("SELECT * FROM Admin WHERE email = $email AND password = $password", login, (err, row) =>{
+            
             if(err){
                 res.status(404).send()
             }else{
@@ -31,6 +32,7 @@ userRouter.use('/login', (req, res, next) =>{
                     //console.log(req.session.admin);
                     next();
                 }else{
+                    
                     res.status(404).send()
                 }
                 
@@ -38,6 +40,7 @@ userRouter.use('/login', (req, res, next) =>{
         });
         
     }else{
+      
         res.status(404).send();
     }
 });
@@ -285,6 +288,83 @@ userRouter.get('/user/my-inbox/:id', isAdmin, (req, res, next) =>{
             }
         }
     })
+});
+
+userRouter.post('/user/my-portfolio/add', isAdmin, (req, res, next) =>{
+    const data = req.body;
+    const updateData ={
+        $content : data.content,
+        $date_start : data.date_start,
+        $date_end : data.date_end,
+    }
+
+    db.run("INSERT INTO Portfolio(content, date_start, date_end) VALUES($content, $date_start, $date_end)", updateData, (err, success) =>{
+        if(err){
+            res.status(500).json({error: err});
+        }else{
+            res.status(201).json({success: true});
+        }
+    })
+
+});
+userRouter.get('/user/my-portfolio', (req, res, next) =>{
+   
+    db.all("SELECT * FROM Portfolio ORDER BY date_time DESC", (err, rows) => {
+       res.status(201).json({data: rows});
+    });
+
+});
+
+userRouter.get('/user/my-portfolio/:id', isAdmin, (req, res, next) =>{
+    const data = {
+        $id : req.params.id
+    }
+    db.get("SELECT * FROM Portfolio WHERE id = $id", data, (err, row) => {
+        if(err){
+            console.error(err)
+        }
+        else{
+            res.status(201).json({post: row});
+        }
+       
+    });
+
+});
+
+userRouter.post('/user/my-portfolio/update', isAdmin, (req, res, next) =>{
+    console.log(req.body)
+    const data = {
+        $content: req.body.content,
+        $date_start: req.body.date_start,
+        $date_end: req.body.date_end,
+        $id : req.body.id
+    }
+    console.log(data)
+
+    db.run(`UPDATE Portfolio SET content = $content, date_start = $date_start,
+     date_end = $date_end, date_time = CURRENT_TIMESTAMP WHERE id = $id`, data, (err, success) =>{
+         if (!err){
+            res.status(201).send();
+         }else{
+            res.status(404).send();
+         }
+     } )
+});
+
+userRouter.post('/user/my-portfolio/delete', isAdmin, (req, res, next) =>{
+    console.log(req.body)
+    const data = {
+        $id : req.body.id
+    }
+
+    db.run("DELETE FROM Portfolio WHERE id = $id", data, (err)=>{
+        if(!err){
+            res.status(201).send();
+        }else{
+            res.status(404).send();
+        }
+    })
+    
 });
 
 module.exports = userRouter;

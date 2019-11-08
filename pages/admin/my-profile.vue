@@ -24,6 +24,16 @@
                         <span class="text-danger small">{{ errors[0] }}</span>
                     </b-form-group>
                 </ValidationProvider>
+                
+                <ValidationProvider name="pseudo" rules="required" v-slot="{ errors }">
+                    <b-form-group label-for="username-input" label="Pseudo:">
+                        <b-form-input 
+                            id="username-input"
+                            v-model="username"
+                        ></b-form-input>
+                        <span class="text-danger small">{{ errors[0] }}</span>
+                    </b-form-group>
+                </ValidationProvider>
 
                 <ValidationProvider name="birthday" rules="required" v-slot="{ errors }">
                     <b-form-group label-for="birthday-input" label="Date de naissance:" description="format flexible.">
@@ -74,10 +84,10 @@
                 <b-button type="submit" variant="primary"  >
                   <span v-if="sending">
                         <b-spinner small type="grow"></b-spinner>
-                        En cours...
+                        In process...
                     </span>
                     <span v-else>
-                        Actualiser
+                        Update
                     </span>
                 </b-button>
             </b-form>

@@ -1,4 +1,5 @@
 const env = require('dotenv').config();
+var Editor = require('@tinymce/tinymce-vue');
 
 module.exports = {
   router: {
@@ -6,6 +7,7 @@ module.exports = {
   },
   mode: 'universal',
   env: env.parsed,
+  Editor: Editor.default,
   /*
   ** Headers of the page
   */
@@ -18,7 +20,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
   },
   /*
   ** Customize the progress-bar color
@@ -33,13 +35,15 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~plugins/vee-validate.js' , ssr: false}
+    { src: '~plugins/vee-validate.js' , ssr: false},
+    {src:'~/plugins/vue-moment.js'}
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
   ],
+
   /*
   ** Nuxt.js modules
   */
