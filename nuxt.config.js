@@ -7,7 +7,7 @@ module.exports = {
     //active base url and modify with your folder name if your website is not at root folder
     //base: '/nodejs/'
   },
-  mode: 'spa',
+  mode: 'universal',
   env: env.parsed,
   Editor: Editor.default,
   /*
@@ -37,8 +37,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~plugins/vee-validate.js' , ssr: false},
-    {src:'~/plugins/vue-moment.js'}
+    { src: '~plugins/vee-validate.js', mode: 'client'},
+    {src:'~/plugins/vue-moment.js', mode: 'client'}
   ],
   /*
   ** Nuxt.js dev-modules
