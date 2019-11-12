@@ -37,7 +37,7 @@
                         </b-form-group>
                     </ValidationProvider>
                     <b-alert variant="success" :show="success">Votre message a été envoyé avec succès!</b-alert>
-                    <b-alert :show="error" variant="danger">Erreur lors de l'envoie du message contacter moi directement megalima@hotmail.com </b-alert>
+                    <b-alert :show="error" variant="danger">Erreur lors de l'envoie du message </b-alert>
                     <b-button type="submit" variant="primary" :disabled="!valid || sending" >
                     <span v-if="sending">
                             <b-spinner small type="grow"></b-spinner>

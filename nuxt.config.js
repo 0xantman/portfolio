@@ -57,7 +57,7 @@ module.exports = {
     '@bazzite/nuxt-netlify',
   ],
   netlify: { 
-    
+
   },
   auth: {
     strategies: {
@@ -79,10 +79,7 @@ module.exports = {
       }
     }
   },
-  axios: {
-    baseURL: '/',
-    //credentials: true
-  },
+  
   /*
   ** Build configuration
   */
