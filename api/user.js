@@ -309,7 +309,7 @@ userRouter.post('/user/my-portfolio/add', isAdmin, (req, res, next) =>{
 });
 userRouter.get('/user/my-portfolio', (req, res, next) =>{
    
-    db.all("SELECT * FROM Portfolio ORDER BY date_time DESC", (err, rows) => {
+    db.all("SELECT * FROM Portfolio ORDER BY date_end DESC", (err, rows) => {
        res.status(201).json({data: rows});
     });
 
