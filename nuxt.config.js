@@ -53,8 +53,12 @@ module.exports = {
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    '@bazzite/nuxt-netlify',
   ],
+  netlify: { 
+    
+  },
   auth: {
     strategies: {
       local: {
