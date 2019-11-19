@@ -46,7 +46,7 @@ module.exports = {
   buildModules: [
   ],
   axios:{
-    baseURL: '/'
+    baseURL: process.env.BASE_URL | '/'
   },
   /*
   ** Nuxt.js modules
