@@ -23,6 +23,28 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ## Config Setup
 Create account in Firebase and setup a Authenticate User email and password
+Firebase Realtime Database Rules:
+
+Copy&Past 
+```
+{
+  "rules": {
+    "inboxes":{
+      ".read": "auth.uid != null",
+      ".write" : "auth.uid != null"
+    },
+    "profile":{
+      ".read": true,
+			".write": "auth.uid != null"
+    },
+    "portfolio":{
+        ".read": true,
+        ".write" : "auth.uid != null"
+    }
+  }
+}
+```
+
 Create a .env file in root project, add and complete with your Firebase SDK snippet firebaseConfig:
 
     JWT_SECRET_KEY= randomKeyPassword
@@ -32,6 +54,7 @@ Create a .env file in root project, add and complete with your Firebase SDK snip
     FIREBASE_DATABASE_URL = 
     FIREBASE_STORAGE_BUCKET = 
     TINYMCE_API = yourTinyKey We use Tiny text editor get your api key at [TinyMCE](https://www.tiny.cloud/).
+
 
 
 
