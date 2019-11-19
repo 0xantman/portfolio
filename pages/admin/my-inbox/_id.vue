@@ -5,7 +5,7 @@
         {{post.message}}
       </b-card-text>
       <b-card-text>
-        <small class="text-muted">{{post.date_time}}</small>
+        <small class="text-muted">{{post.date_time | moment("dddd, MMMM Do YYYY, HH:mm")}}</small>
       </b-card-text>
     </b-card>
   </div>

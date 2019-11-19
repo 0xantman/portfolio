@@ -67,20 +67,28 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 export default {
     asyncData({ $axios, $auth, redirect, $emit, store, params}){
         return $axios.$get('/admin/user/my-portfolio/'+params.id).then(res =>{
-        return{
+            return{
+                content: res.data.content,
+                date_start: res.data.date_start,
+                date_end: res.data.date_end,
+                id: res.data.id
+            }
+        }).catch(async (e) =>{
+            //await $auth.logout();
+            redirect(404, '/admin/my-portfolio');
+        })
+    },
+    data(){
+        return {
             env: process.env.TINYMCE_API,
-            content: res.post.content,
-            date_start: res.post.date_start,
-            date_end: res.post.date_end,
-            id: res.post.id,
+            content: null,
+            date_start: null,
+            date_end: null,
+            id: null,
             sending: false,
             success: false,
             error: false
         }
-        }).catch(async (e) =>{
-            await $auth.logout();
-            redirect(302, '/login');
-        })
     },
     components: {
         'tinymce-editor': Editor, // <- Important part,

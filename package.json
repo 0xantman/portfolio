@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
-    "build": "nuxt build & node migration.js",
+    "build": "nuxt build",
     "start": "cross-env NODE_ENV=production node server/index.js",
     "generate": "nuxt generate",
     "test": "jest"
@@ -25,6 +25,8 @@
     "errorhandler": "^1.5.1",
     "express": "^4.16.4",
     "express-session": "^1.16.2",
+    "firebase": "^7.4.0",
+    "firebase-admin": "^8.7.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.9.1",
     "nuxt": "^2.9.0",

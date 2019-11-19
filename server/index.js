@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
+
 const errorhandler = require('errorhandler');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.use(errorhandler());
 app.use('/', apiRouter);
 
 // Import and Set Nuxt.js options

@@ -36,7 +36,6 @@ export default {
     },
     created(){
         this.$axios.get('/admin/profile').then(response =>{
-            console.log(response);
             this.fullname = response.data.profile.fullname;
             this.birthday = response.data.profile.birthday;
             this.biography = response.data.profile.biography;

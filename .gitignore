@@ -91,3 +91,9 @@ sw.*
 
 # Database
 .db
+
+#Firebase
+firebase_credentials/*
+!/firebase_credentials/.gitkeep 
+#install
+install.js

@@ -58,9 +58,6 @@ module.exports = {
     '@nuxtjs/auth',
     '@bazzite/nuxt-netlify',
   ],
-  netlify: { 
-
-  },
   auth: {
     strategies: {
       local: {
@@ -77,7 +74,9 @@ module.exports = {
         tokenType: 'bearer'
       },
       redirect: {
-        home: '/',
+        home: '/admin',
+        login: '/login',
+        logout: '/'
       }
     }
   },

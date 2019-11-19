@@ -69,6 +69,7 @@ export default {
                         password: this.password
                     }
                 })
+                //this.$router.push("/admin");
                 
 
             }catch (e){ 

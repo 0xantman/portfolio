@@ -99,21 +99,24 @@
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 export default {
    asyncData ({ $axios, $auth, redirect}) {
-    return $axios.$get('/admin/user/profile')
+    return $axios.$get('/admin/profile')
     .then((res) => {
       console.log(res.profile)
-      return {  
-                email: res.profile.email,
-                fullname: res.profile.fullname,
-                image: res.profile.image,
-                birthday: res.profile.birthday,
-                username: res.profile.username,
-                website: res.profile.website,
-                biography: res.profile.biography,
-                sending: false,
-                error: false,
-                success: false
-            }
+    
+        return {  
+            email: res.profile.email ,
+            fullname: res.profile.fullname,
+            image: res.profile.image,
+            birthday: res.profile.birthday,
+            username: res.profile.username,
+            website: res.profile.website,
+            biography: res.profile.biography,
+            sending: false,
+            error: false,
+            success: false
+        }
+    
+      
     }).catch(async (e) =>{
         await $auth.logout();
         redirect(302, '/login');

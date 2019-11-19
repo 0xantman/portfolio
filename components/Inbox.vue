@@ -24,6 +24,9 @@
                     <span class="sr-only">Not selected</span>
                 </template>
             </template>
+            <template v-slot:cell(date)="row" >
+                {{row.item.date | moment("dddd, MMMM Do YYYY, HH:mm")}}
+            </template>
            
             <template v-slot:cell(show_details)="row" >
                 <b-container>

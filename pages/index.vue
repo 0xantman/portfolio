@@ -14,7 +14,6 @@ export default {
   asyncData ({ $axios, $auth, redirect, $emit, store}) {
     return $axios.$get('/admin/user/my-portfolio')
     .then((res) => {
-      console.log(res)
       return{
         post : res.data
       }
@@ -22,6 +21,11 @@ export default {
     }).catch(async (e) =>{
        console.error(e);
     })
+  },
+  data(){
+    return{
+      post: []
+    }
   },
   mounted(){
   },
