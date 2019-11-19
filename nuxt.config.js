@@ -5,7 +5,7 @@ module.exports = {
   router: {
     linkActiveClass: 'active',
     //active base url and modify with your folder name if your website is not at root folder
-    //base: '/nodejs/'
+    //base: '/'
   },
   mode: 'universal',
   env: env.parsed,
@@ -46,7 +46,13 @@ module.exports = {
   buildModules: [
   ],
   axios:{
-    baseURL: env.BASE_URL || '/'
+    baseURL: env.BASE_URL || '/',
+    debug: true,
+    proxy: true
+  },
+  proxy: {
+    // Proxies /foo to http://example.com/foo
+    '/' : env.BASE_URL
   },
   /*
   ** Nuxt.js modules
