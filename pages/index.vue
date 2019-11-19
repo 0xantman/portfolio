@@ -24,7 +24,7 @@ export default {
   },
   data(){
     return{
-      post: []
+      post: null
     }
   },
   mounted(){
