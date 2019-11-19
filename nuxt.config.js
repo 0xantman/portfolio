@@ -7,7 +7,7 @@ module.exports = {
     //active base url and modify with your folder name if your website is not at root folder
     //base: '/nodejs/'
   },
-  mode: 'universal',
+  mode: 'spa',
   env: env.parsed,
   Editor: Editor.default,
   /*
