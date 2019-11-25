@@ -3,35 +3,76 @@
 </template>
 
 <script>
-import Inbox from '~/components/Inbox'
+import Inbox from '~/components/Inbox';
+import firebase from 'firebase';
 export default {
-    asyncData({ $axios, $auth, redirect, $emit}){
-        return $axios.$get('/admin/user/inbox/archive')
-        .then((res) => {
-            
-        //$emit('new-notification', res.new.length);
-        return {  
-                    
-            items: res.archive,
-            inbox: res.inbox
-                       
-            }
+    async asyncData({ $axios, $auth, redirect, $emit}){
 
-        }).catch(async (e) =>{
-            await $auth.logout();
-            redirect(302, '/login');
-        })
+        try {
+            const snapshot = await firebase.database().ref('inboxes/').once('value');
+            if(snapshot.exists()){
+            
+                const news = [];
+            
+                snapshot.forEach(el => {
+                    const data = el.val();
+                    if(data.archive){
+                        const json = {
+                            date: data.date_time,
+                            email: data.email,
+                            subject: data.subject,
+                            unread: data.read,
+                            id: el.key
+                        }
+                        news.push(json);
+                    }
+                })
+                return {  
+                    items: news,
+                    inbox: true                
+                    }
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    data(){
+        return{
+            items: [],
+            inbox: false
+        }
     },
     components:{
         Inbox
     },
     methods:{
-        reload(){
-            this.$axios.get('/admin/user/inbox/archive').then(res => {
-                this.items = res.data.archive;
-                this.inbox = res.data.inbox;
-                console.log(res)
-            });
+        async reload(){
+            try {
+                const snapshot = await firebase.database().ref('inboxes/').once('value');
+                if(snapshot.exists()){
+                
+                    const news = [];
+                
+                    snapshot.forEach(el => {
+                        const data = el.val();
+                        if(data.archive){
+                            const json = {
+                                date: data.date_time,
+                                email: data.email,
+                                subject: data.subject,
+                                unread: data.read,
+                                id: el.key
+                            }
+                            news.push(json);
+                        }
+                    })
+                    this.items = news;
+                    this.inbox = true
+                }
+            } catch (error) {
+                this.inbox = false
+                console.error(error)
+            }
         }
     }
 

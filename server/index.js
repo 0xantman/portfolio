@@ -2,7 +2,7 @@ const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
-const apiRouter = require('../api/api');
+//const apiRouter = require('../api/api');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(errorhandler());
-app.use('/', apiRouter);
+//app.use('/', apiRouter);
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')

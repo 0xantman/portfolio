@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="card mb-3 " style="max-width: 540px;">
+            <b-spinner v-if="loading" label="Spinning"></b-spinner>
+            <div v-else class="card mb-3 " style="max-width: 540px;">
                 <div class="row no-gutters">
                     <div class="col-md-4">
                         <img :src="image" class="card-img" alt="">
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 export default {
     data(){
         return{
@@ -31,24 +33,34 @@ export default {
             website: null,
             biography: null,
             username: null,
-            image : null
+            image : null,
+            loading: true
         }
     },
     created(){
-        this.$axios.get('/admin/profile').then(response =>{
-            this.fullname = response.data.profile.fullname;
-            this.birthday = response.data.profile.birthday;
-            this.biography = response.data.profile.biography;
-            this.website = response.data.profile.website;
-            this.username = response.data.profile.username;
-            this.image = response.data.profile.image;
-
-        }).catch(error =>{
-            console.log(error);
-        })
+        this.profile();
     },
     methods:{
+        async profile (){
+            try {
+                const snapshot = await firebase.database().ref('profile/').once('value');
+                if(snapshot.exists()){
 
+                    const data = snapshot.val();
+
+                    this.fullname = data.fullname;
+                    this.birthday = data.birthday;
+                    this.biography = data.biography;
+                    this.website = data.website;
+                    this.username = data.username;
+                    this.image = data.image;
+                }
+                this.loading = false;
+
+            } catch (error) {
+                console.error(error)
+            }
+        }
     }
 }
 </script>

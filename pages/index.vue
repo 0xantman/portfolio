@@ -9,18 +9,34 @@
 import Logo from '~/components/Logo.vue'
 import Profile from '~/components/Profile.vue'
 import Folio from '~/components/Folio.vue'
+import firebase from 'firebase';
 
 export default {
-  asyncData ({ $axios, $auth, redirect, $emit, store}) {
-    return $axios.$get('/admin/user/my-portfolio')
-    .then((res) => {
-      return{
-        post : res.data
+  async asyncData () {
+    try {
+      const snapshot = await firebase.database().ref('portfolio/').once('value');
+      if(snapshot.exists()){
+        const items = [];
+        snapshot.forEach(el => {
+            const data = el.val();
+          
+            const json = {
+                content : data.content,
+                date_start : data.date_start,
+                date_end : data.date_end,
+                date_time : data.date_time,
+                id : el.key
+            }
+            items.push(json);
+            
+        })
+        return {
+          post : items
+        }
       }
-
-    }).catch(async (e) =>{
-       console.error(e);
-    })
+    } catch (error) {
+      console.error(error)
+    }  
   },
   data(){
     return{

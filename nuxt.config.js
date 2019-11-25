@@ -38,7 +38,8 @@ module.exports = {
   */
   plugins: [
     { src: '~plugins/vee-validate.js', mode: 'client'},
-    {src:'~/plugins/vue-moment.js', mode: 'client'}
+    {src:'~/plugins/vue-moment.js', mode: 'client'},
+    {src:'~/plugins/firebase.js', mode: 'client'}
   ],
   /*
   ** Nuxt.js dev-modules

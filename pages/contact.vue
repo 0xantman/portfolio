@@ -18,7 +18,7 @@
                         <b-form-group label-for="subject-input" label="Sujet:">
                             <b-form-input 
                                 id="subject-input"
-                                v-model="sujet" 
+                                v-model="subject" 
                                 placeholder="Sujet"
                             ></b-form-input>
                             <span class="text-danger small">{{ errors[0] }}</span>
@@ -56,11 +56,13 @@
 <script>
 
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import firebase from 'firebase';
+
 export default {
     data(){
      return{
          email : null,
-         sujet: null,
+         subject: null,
          message: null,
          sending: false,
          success: false,
@@ -78,37 +80,39 @@ export default {
     methods: {
 
       async submit(){
-        const isValid = await this.$refs.observer.validate();
-        if (!isValid) {
-           console.error('error form required')
-        }
-         this.sending = true;
-
-            this.$axios.post('/api', {
-                email: this.email,
-                subject: this.sujet,
-                message: this.message
-            }).then(response =>{
-                this.sending = false;
-                console.log(response)
-                if(!response.data.err){
+          try {
+            const isValid = await this.$refs.observer.validate();
+            if (!isValid) {
+                throw new Error("error form required")
+            }
+            this.sending = true;
+            await firebase.database().ref('inboxes/').push({
+                email : this.email,
+                subject : this.subject,
+                message : this.message,
+                read : false,
+                archive : false,
+                date_time : Date.now()
+            }, (err) =>{
+                if(err){
+                    this.sending = false;
+                    this.error = true
+                }else{
+                    this.sending = false;
                     this.success = true;
                     this.email = '';
                     this.sujet = '';
                     this.message = '';
-                }else{
-                    this.error = true
                 }
-            }).catch(err =>{
-                this.sending = false;
-                this.error = true
-            })
+            });
     
-        requestAnimationFrame(() => {
-            this.$refs.observer.reset();
-        });
+            requestAnimationFrame(() => {
+                this.$refs.observer.reset();
+            });
 
-        
+          } catch (error) {
+              console.error(error)
+          }
       }
     }
 }

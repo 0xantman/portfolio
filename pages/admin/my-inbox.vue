@@ -19,24 +19,33 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations } from 'vuex';
+import firebase from 'firebase';
 export default {
 
-  asyncData ({ $axios, $auth, redirect, $emit, store}) {
-    return $axios.$get('/admin/user/inbox/count')
-    .then((res) => {
-      console.log(res)
-      //GET THE COUNT FOR NOTIFICATION NUMBERS.
-      //console.log(res.new.length)
-      //$emit('new-notification', res.new.length);
-      
-      store.commit('notification/updateNews', res.unread);
-      store.commit('notification/updateArchive', res.read);
-
-    }).catch(async (e) =>{
-        await $auth.logout();
-        redirect(302, '/login');
-    })
+  async asyncData ({ $axios, $auth, redirect, $emit, store}) {
+    try {
+      const snapshot = await firebase.database().ref('inboxes/').once('value');
+      if(snapshot.exists()){ 
+          let unreadCount = 0;
+          let readCount = 0;
+        
+          snapshot.forEach(el => {
+              const data = el.val();
+            
+              if(!data.read && data.archive){
+                  readCount++
+              }
+              else if(!data.read && !data.archive){
+                  unreadCount++;
+              }
+          })
+          store.commit('notification/updateNews', unreadCount);
+          store.commit('notification/updateArchive', readCount);
+      }
+    } catch (error) {
+      console.error(error)
+    }
   },
   computed: {
     news () {

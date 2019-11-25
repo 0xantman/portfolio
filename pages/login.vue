@@ -44,6 +44,7 @@
 <script>
 import axios from 'axios'; 
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import firebase from 'firebase';
 
 export default {
     middleware: "guest",
@@ -60,36 +61,16 @@ export default {
         ValidationObserver
     },
     methods:{
-        async submit(){
-            this.sending = true;
-            try{
-                await this.$auth.loginWith('local', {
-                    data: {
-                        email: this.email,
-                        password: this.password
-                    }
-                })
-                //this.$router.push("/admin");
-                
-
-            }catch (e){ 
-                console.log(e);
+       async submit(){
+            try {
+                this.sending = true;
+                await firebase.auth().signInWithEmailAndPassword(this.email.trim().toLowerCase(), this.password);
+                const idToken = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true);
+                this.$auth.setUserToken(idToken);
+            } catch (error) {
                 this.sending = false;
                 this.error = true
-            }
-            
-            /*axios.post('/admin/login',{
-                email: this.email,
-                password: this.password
-            }).then(response =>{
-                console.log(response)
-                this.sending = false
-                this.error = false
-            }).catch(error =>{
-                console.log(error)
-                this.sending = false
-                this.error = true
-            })*/
+            }    
         }
     }
 }

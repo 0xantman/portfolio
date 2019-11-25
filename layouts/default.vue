@@ -1,23 +1,23 @@
 <template>
-  <div >
+  <div>
     <header>
+      <b-alert variant="danger" :show="$nuxt.isOffline">No internet connection</b-alert>
       <Navbar/>
     </header>
     <nuxt/>
-
     <footer class="border-top mt-5">
       <div class="container">
         <div class="row justify-content-start">
           <b-nav vertical class="w-25">
             <b-nav-item disabled class="font-weight-bold h5">Support</b-nav-item>
-            <b-nav-item href="/contact">Contact</b-nav-item>
+            <b-nav-item to="/contact">Contact</b-nav-item>
           </b-nav>
         </div>
         <div class="row justify-content-center">
           <p class="small text-muted">This website was build with ❥ Sqlite3, Express, VueJS, NodeJS, Bootstrap-vue, Vee-validate, Jest.</p>
         </div>
         <div class="row justify-content-end">
-          <p class="small text-muted text-left">©2019 Tous droits réservés. - <a href="https://github.com/0xantman" class="font-weight-bold">@0xantman</a></p>
+          <p class="small text-muted text-left">©2019 Made with 💙 by - <a href="https://github.com/0xantman" class="font-weight-bold">@0xantman</a></p>
         </div>
       </div>
     </footer>
@@ -29,8 +29,7 @@ import Navbar from '~/components/Navbar'
 export default {
   components: {
     Navbar
-  },
-  
+  },  
 }
 </script>
 <style>

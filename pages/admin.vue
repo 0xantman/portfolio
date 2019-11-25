@@ -24,23 +24,10 @@
 <script>
 
 export default {
-    middleware: 'auth',
     data(){
         return{
             data: null
         }
-    },
-    mounted(){
-        console.log(this.$router)
-        /*this.$axios.get("/admin/backend").then(response =>{
-            console.log(response);
-        }).catch(error =>{
-            console.log(error);
-        })*/
     }
 }
 </script>
-
-<style>
-
-</style>

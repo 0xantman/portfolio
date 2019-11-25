@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import firebase from 'firebase';
+import { mapMutations } from 'vuex';
 export default {
     props:{
         items:{
@@ -74,9 +76,19 @@ export default {
         return{
             fields: ['selected', 'date', 'email', 'subject',  'show_details'/*, 'edit'*/],
             isBusy: false,
-            selectedItems : [],
-            selectedOption : null,
-            
+            selectedItems: [],
+            selectedOption: null,
+            archiveCount: null,
+            newsCount: null
+
+        }
+    },
+    watch:{
+        archiveCount(){
+            this.$store.commit('notification/updateNews', this.archiveCount);
+        },
+        newsCount(){
+            this.$store.commit('notification/updateArchive', this.newsCount);
         }
     },
     computed:{
@@ -100,43 +112,61 @@ export default {
         onRowSelected(items){          
             this.selectedItems = items;
         },
+        reload(){
+            this.selectedItems = [];
+            this.$emit("action");
+            firebase.database().ref('inboxes/').once('value', snapshot =>{
+                console.log(snapshot);
+                if(snapshot.exists()){
+                    let unreadCount = 0;
+                    let readCount = 0;
+                    
+                    snapshot.forEach(el => {
+                        const data = el.val();
+                        
+                        if(!data.read && data.archive){
+                            readCount++
+                        }
+                        else if(!data.read && !data.archive){
+                            unreadCount++;
+                        }
+                    })
+
+                    this.newsCount = readCount;
+                    this.archiveCount = unreadCount;
+                    
+                }                
+            });
+        
+        },
         action(){
             switch (this.selectedOption) {
                 case 'A':
-                    this.$axios.post('/admin/user/inbox/action/archive',{
-                        data: this.selectedItems
-                    }).then( result => {     
-                        this.selectedItems = [];
-                        this.$emit("action");
 
-                        this.$axios.get('/admin/user/inbox/count').then(resTwo =>{
-                            this.$store.commit('notification/updateNews', resTwo.data.unread);
-                            this.$store.commit('notification/updateArchive', resTwo.data.read);
-                            
-                        });
-                        
+                    try {
+                        this.selectedItems.forEach(async element => {
+                            await firebase.database().ref('inboxes/' + element.id).update({
+                                archive : true
+                            })
+                        })
 
-                    }).catch(err =>{
-                        console.error(err)
-                    });
+                        this.reload();
+                    } catch (error) {
+                        console.error(error);
+                    }
+
                     break;
                 case 'D':
-                    this.$axios.post('/admin/user/inbox/action/delete',{
-                        data: this.selectedItems
-                    }).then(result => {
-                        this.selectedItems = [];
-                        this.$emit("action");
 
-                        this.$axios.get('/admin/user/inbox/count').then(resTwo =>{
-                            this.$store.commit('notification/updateNews', resTwo.data.unread);
-                            this.$store.commit('notification/updateArchive', resTwo.data.read);
-                        });
+                    try {
+                        this.selectedItems.forEach(async element => {
+                            await firebase.database().ref('inboxes/' + element.id).remove()
+                        })
 
-                        
-
-                    }).catch(err =>{
-                        console.error(err)
-                    });
+                        this.reload();
+                    } catch (error) {
+                        console.error(error);
+                    }
                     break;
                 default:
                     break;

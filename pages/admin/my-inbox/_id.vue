@@ -12,24 +12,65 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 export default {
-  asyncData({ $axios, $auth, redirect, $emit, store, params}){
-    console.log(params.id);
-    return $axios.$get('/admin/user/my-inbox/'+params.id).then(res =>{
-      return{
-        post : res.message
-      }
-    }).catch(async (e) =>{
-        await $auth.logout();
-        redirect(302, '/login');
-    })
+  async asyncData({ $axios, $auth, redirect, $emit, store, params}){
+    try {
+      const ref = firebase.database().ref('inboxes/' + params.id);
+      await ref.update({read : true});
+      const snapshot = await ref.once('value');
+      if(snapshot) {
+            if(snapshot.exists()){
+                const data = snapshot.val();
+                return{
+                  post : data
+                }
+            }
+        }
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  data(){
+    return{
+      newsCount : null,
+      archiveCount : null
+    }
+  },
+  watch:{
+    newsCount(){
+      this.$store.commit('notification/updateArchive', this.newsCount);
+    },
+    archiveCount(){
+      this.$store.commit('notification/updateNews', this.archiveCount);
+    }
+  },
+  methods:{
+    reload(){
+        firebase.database().ref('inboxes/').once('value', snapshot =>{
+            if(snapshot.exists()){
+                let unreadCount = 0;
+                let readCount = 0;
+                
+                snapshot.forEach(el => {
+                    const data = el.val();
+                    
+                    if(!data.read && data.archive){
+                        readCount++
+                    }
+                    else if(!data.read && !data.archive){
+                        unreadCount++;
+                    }
+                })
+
+                this.newsCount = readCount;
+                this.archiveCount = unreadCount;  
+            }                
+        });
+    }
   },
   mounted(){
-    this.$axios.get('/admin/user/inbox/count').then(resTwo =>{
-        this.$store.commit('notification/updateNews', resTwo.data.unread);
-        this.$store.commit('notification/updateArchive', resTwo.data.read);
-        
-    });
+    this.reload();
   }
 }
 </script>
