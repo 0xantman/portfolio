@@ -47,13 +47,7 @@ module.exports = {
   buildModules: [
   ],
   axios:{
-    baseURL: env.BASE_URL || '/',
-    debug: true,
-    proxy: true
-  },
-  proxy: {
-    // Proxies /foo to http://example.com/foo
-    '/' : env.BASE_URL
+    baseURL: env.BASE_URL || '/'
   },
   /*
   ** Nuxt.js modules
