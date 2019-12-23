@@ -1,7 +1,7 @@
 <template>
 <client-only placeholder="Loading...">
     <b-container>
-        <b-row v-for="(item, index) in dataPost" :key="index">
+        <b-row v-for="(item, index) in reOrder" :key="index">
             <b-col cols="12">
                 <b-card
                     tag="article"
@@ -25,6 +25,18 @@ export default {
     props:{
         dataPost:{
             type: Array
+        }
+    },
+    computed:{
+        reOrder(){
+            //Order by more recent experience
+             var data = this.dataPost.sort(function(a, b) {
+                        a = new Date(a.date_start);
+                        b = new Date(b.date_start);
+                        return a > b ? -1 : a < b ? 1 : 0;
+                    })
+            
+            return data
         }
     }
 }

@@ -22,7 +22,7 @@ export default {
                 const items = [];
                 snapshot.forEach(el => {
                     const data = el.val();
-                
+
                     const json = {
                         content : data.content,
                         date_start : data.date_start,
@@ -35,7 +35,7 @@ export default {
                 })
                 
                 return {
-                    posts : items
+                    posts : data
                 }
             
             }

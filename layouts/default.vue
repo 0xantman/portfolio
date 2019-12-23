@@ -14,7 +14,7 @@
           </b-nav>
         </div>
         <div class="row justify-content-center">
-          <p class="small text-muted">This website was build with ❥ Sqlite3, Express, VueJS, NodeJS, Bootstrap-vue, Vee-validate, Jest.</p>
+          <p class="small text-muted">This website was build in JAMstack with ❥ Nuxt, VueJS, Firebase, Bootstrap-vue, Vee-validate, Jest.</p>
         </div>
         <div class="row justify-content-end">
           <p class="small text-muted text-left">©2019 Made with 💙 by - <a href="https://github.com/0xantman" class="font-weight-bold">@0xantman</a></p>
