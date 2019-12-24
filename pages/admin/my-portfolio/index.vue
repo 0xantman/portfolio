@@ -35,7 +35,7 @@ export default {
                 })
                 
                 return {
-                    posts : data
+                    posts : items
                 }
             
             }

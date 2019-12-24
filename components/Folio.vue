@@ -12,7 +12,6 @@
                         <b-card-text v-html="item.content"></b-card-text>
                         <b-card-text><small class="text-muted">Last updated {{item.date_time | moment("dddd, MMMM Do YYYY, HH:mm")}}</small></b-card-text>
                     </b-card-body>
-                    
                 </b-card>
             </b-col>
         </b-row>
@@ -30,11 +29,11 @@ export default {
     computed:{
         reOrder(){
             //Order by more recent experience
-             var data = this.dataPost.sort(function(a, b) {
-                        a = new Date(a.date_start);
-                        b = new Date(b.date_start);
-                        return a > b ? -1 : a < b ? 1 : 0;
-                    })
+            let data = this.dataPost.sort(function(a, b) {
+                a = new Date(a.date_start);
+                b = new Date(b.date_start);
+                return a > b ? -1 : a < b ? 1 : 0;      
+            })
             
             return data
         }
