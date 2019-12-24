@@ -33,7 +33,7 @@
 export default {
   data(){
     return{
-      websiteName : process.env.WEBSITE_NAME
+      websiteName : process.env.NUXT_ENV_WEBSITE_NAME
     }
   },
   computed:{

@@ -54,7 +54,7 @@ import firebase from 'firebase';
 export default {
     data(){
         return {
-            env: process.env.TINYMCE_API,
+            env: process.env.NUXT_ENV_TINYMCE_API,
             content: "",
             date_start: "",
             date_end : "",

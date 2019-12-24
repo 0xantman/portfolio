@@ -47,16 +47,16 @@ Copy&Past
 
 Create a .env file in root project, add and complete with your Firebase SDK snippet firebaseConfig:
 
-    JWT_SECRET_KEY= randomKeyPassword
-    BASE_URL = http://localhost:3000
-    TINYMCE_API = yourTinyKey We use Tiny text editor get your api key at [TinyMCE](https://www.tiny.cloud/)
-    TITLE = My portfolio!
-    CONTENT = A passionate web developer introduces himself. Come and check my portfiolio!
-    WEBSITE_NAME = @Portfolio
-    FIREBASE_API_KEY = 
-    FIREBASE_AUTH_DOMAIN = 
-    FIREBASE_DATABASE_URL = 
-    FIREBASE_STORAGE_BUCKET = 
+    NUXT_ENV_JWT_SECRET_KEY= randomKeyPassword
+    NUXT_ENV_BASE_URL = http://localhost:3000
+    NUXT_ENV_TINYMCE_API = yourTinyKey We use Tiny text editor get your api key at [TinyMCE](https://www.tiny.cloud/)
+    NUXT_ENV_TITLE = My portfolio!
+    NUXT_ENV_CONTENT = A passionate web developer introduces himself. Come and check my portfiolio!
+    NUXT_ENV_WEBSITE_NAME = @Portfolio
+    NUXT_ENV_FIREBASE_API_KEY = 
+    NUXT_ENV_FIREBASE_AUTH_DOMAIN = 
+    NUXT_ENV_FIREBASE_DATABASE_URL = 
+    NUXT_ENV_FIREBASE_STORAGE_BUCKET = 
 
 
 

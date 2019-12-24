@@ -86,7 +86,7 @@ export default {
     },
     data(){
         return {
-            env: process.env.TINYMCE_API,
+            env: process.env.NUXT_ENV_TINYMCE_API,
             content: null,
             date_start: null,
             date_end: null,
